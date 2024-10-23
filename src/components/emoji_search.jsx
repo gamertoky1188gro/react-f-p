@@ -7,53 +7,27 @@ export const Emoji_Search = () => {
     const [isCopying, setIsCopying] = useState(false); // State to prevent spamming copy
 
     // Fetch emojis from the JSON file
+    const fetchEmojis = () => {
+        fetch("https://raw.githubusercontent.com/chalda-pnuzig/emojis.json/refs/heads/master/src/list.with.images.json")
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setEmojis(data.emojis); // Access the emojis array
+                setFilteredEmojis(data.emojis); // Initialize with all emojis
+            })
+            .catch((error) => {
+                console.error("Error fetching emojis:", error);
+                alert(error);
+            });
+    };
+
     useEffect(() => {
-        fetch("https://raw.githubusercontent.com/chalda-pnuzig/emojis.json/refs/heads/master/src/list.with.images.json")  // Make sure this path is correct
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setEmojis(data.emojis); // Access the emojis array
-                setFilteredEmojis(data.emojis); // Initialize with all emojis
-            })
-            .catch((error) => {
-                console.error("Error fetching emojis:", error);
-                alert(error);
-            });
+        fetchEmojis();
     }, []);
-	
-	function mop() {
-		fetch("https://raw.githubusercontent.com/chalda-pnuzig/emojis.json/refs/heads/master/src/list.with.images.json")  // Make sure this path is correct
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setEmojis(data.emojis); // Access the emojis array
-                setFilteredEmojis(data.emojis); // Initialize with all emojis
-            })
-            .catch((error) => {
-                console.error("Error fetching emojis:", error);
-                alert(error);
-            });
-		let progressBar = document.getElementById('progressBar');
-		let progress = 1;
-		let interval = setInterval(function() {
-			progress += 0.1;
-			progressBar.style.width = (progress / 30 * 100) + '%'; // Convert progress to percentage
-			progressBar.setAttribute('aria-valuenow', progress.toFixed(1)); // Update aria-valuenow for accessibility
-			progressBar.textContent = progress.toFixed(1) + ' / 30'; // Display progress value in the bar
-    
-			if (progress >= 30) {
-			clearInterval(interval);
-		}
-		}, 1);
-	}
 
     // Update filtered emojis based on search term
     useEffect(() => {
@@ -87,16 +61,28 @@ export const Emoji_Search = () => {
             });
     };
 
+    // Handle progress bar functionality
+    const startProgressBar = () => {
+        let progressBar = document.getElementById('progressBar');
+        let progress = 1;
+        let interval = setInterval(() => {
+            progress += 0.1;
+            progressBar.style.width = (progress / 30 * 100) + '%'; // Convert progress to percentage
+            progressBar.setAttribute('aria-valuenow', progress.toFixed(1)); // Update aria-valuenow for accessibility
+            progressBar.textContent = progress.toFixed(1) + ' / 30'; // Display progress value in the bar
+
+            if (progress >= 30) {
+                clearInterval(interval);
+            }
+        }, 100); // Update every 100 ms
+    };
+
     return (
         <>
             <h1>
-                <h1>
-                    <marquee direction="right">
-                        <h1>
-                            <mark>Emoji Search</mark>
-                        </h1>
-                    </marquee>
-                </h1>
+                <marquee direction="right">
+                    <mark>Emoji Search</mark>
+                </marquee>
             </h1>
 
             <div className="container my-4" id="Emoji_Search">
@@ -114,31 +100,32 @@ export const Emoji_Search = () => {
                             <div
                                 key={index}
                                 className="col-sm-6 col-md-4 col-lg-3 mb-3"
-                                style={{cursor: "pointer"}}
+                                style={{ cursor: "pointer" }}
                                 onClick={() => copyToClipboard(emoji.emoji)}
                                 title={`Click to copy ${emoji.name} (${emoji.emoji})`}
                             >
                                 <div className="card h-100">
-                                    <img src={emoji.images.google} className="card-img-top" alt={emoji.name}/>
+                                    <img src={emoji.images.google} className="card-img-top" alt={emoji.name} />
                                     <div className="card-body">
                                         <h5 className="card-title">{emoji.name} ({emoji.emoji})</h5>
                                         <p className="card-text">
-                                            Category: {emoji.category}<br/>
+                                            Category: {emoji.category}<br />
                                             Subcategory: {emoji.subcategory}
                                         </p>
-                                        <p className="card-text">{`it support on: ${JSON.stringify(emoji.support)}`}</p>
+                                        <p className="card-text">{`Support: ${JSON.stringify(emoji.support)}`}</p>
                                     </div>
                                 </div>
                             </div>
                         ))
                     ) : (
-                        <p>No emojis found! Sorry bro! <button onClick={() => mop()}>u can click here for reload</button><div class="progress">
-    <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="30"></div>
-  </div></p>
+                        <p>No emojis found! <button onClick={fetchEmojis}>Reload</button></p>
                     )}
+                    <div className="progress">
+                        <div id="progressBar" className="progress-bar" role="progressbar" style={{ width: '0%' }} aria-valuenow="0" aria-valuemin="0" aria-valuemax="30"></div>
+                    </div>
+                    <button onClick={startProgressBar}>Start Progress</button>
                 </div>
             </div>
-
         </>
     );
 };
