@@ -6,7 +6,7 @@ export const Nav = () => {
             <div className="container-fluid form-control m-2">
                 <a className="navbar-brand" href="#">
                     <img
-                        src="../../public/nav_logo.png"
+                        src="/nav_logo.png"
                         alt="Logo" width="30" height="24" className="d-inline-block align-text-top" />
                 </a>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
