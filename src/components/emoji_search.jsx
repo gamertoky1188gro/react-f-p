@@ -24,6 +24,24 @@ export const Emoji_Search = () => {
                 alert(error);
             });
     }, []);
+	
+	function mop() {
+		fetch("https://raw.githubusercontent.com/chalda-pnuzig/emojis.json/refs/heads/master/src/list.with.images.json")  // Make sure this path is correct
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setEmojis(data.emojis); // Access the emojis array
+                setFilteredEmojis(data.emojis); // Initialize with all emojis
+            })
+            .catch((error) => {
+                console.error("Error fetching emojis:", error);
+                alert(error);
+            });
+	}
 
     // Update filtered emojis based on search term
     useEffect(() => {
@@ -102,7 +120,7 @@ export const Emoji_Search = () => {
                             </div>
                         ))
                     ) : (
-                        <p>No emojis found! Sorry bro!</p>
+                        <p>No emojis found! Sorry bro! <button onClick={() => mop()}>u can click here for reload</button></p>
                     )}
                 </div>
             </div>
