@@ -41,6 +41,18 @@ export const Emoji_Search = () => {
                 console.error("Error fetching emojis:", error);
                 alert(error);
             });
+		let progressBar = document.getElementById('progressBar');
+		let progress = 1;
+		let interval = setInterval(function() {
+			progress += 0.1;
+			progressBar.style.width = (progress / 30 * 100) + '%'; // Convert progress to percentage
+			progressBar.setAttribute('aria-valuenow', progress.toFixed(1)); // Update aria-valuenow for accessibility
+			progressBar.textContent = progress.toFixed(1) + ' / 30'; // Display progress value in the bar
+    
+			if (progress >= 30) {
+			clearInterval(interval);
+		}
+		}, 1);
 	}
 
     // Update filtered emojis based on search term
@@ -120,7 +132,9 @@ export const Emoji_Search = () => {
                             </div>
                         ))
                     ) : (
-                        <p>No emojis found! Sorry bro! <button onClick={() => mop()}>u can click here for reload</button></p>
+                        <p>No emojis found! Sorry bro! <button onClick={() => mop()}>u can click here for reload</button><div class="progress">
+    <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="30"></div>
+  </div></p>
                     )}
                 </div>
             </div>
