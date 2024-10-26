@@ -118,12 +118,11 @@ export const Emoji_Search = () => {
                             </div>
                         ))
                     ) : (
-                        <p>No emojis found! <button onClick={fetchEmojis}>Reload</button></p>
+                        <p>No emojis found! if net is slow sometime it take long time. please wait 30s if didnot loaded click reload and if reload button did not working open devtools and go to network tab or contact site owner! <button onClick={() => {fetchEmojis(); startProgressBar()}>Reload</button></p>
                     )}
                     <div className="progress">
                         <div id="progressBar" className="progress-bar" role="progressbar" style={{ width: '0%' }} aria-valuenow="0" aria-valuemin="0" aria-valuemax="30"></div>
                     </div>
-                    <button onClick={startProgressBar}>Start Progress</button>
                 </div>
             </div>
         </>
